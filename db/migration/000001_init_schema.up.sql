@@ -1,7 +1,7 @@
 CREATE TABLE "project" (
   "id" BIGSERIAL PRIMARY KEY,
-  "name" VARCHAR NOT NULL,
-  "git_path" VARCHAR NOT NULL,
+  "name" VARCHAR(255) NOT NULL,
+  "git_path" VARCHAR(255) NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "description" TEXT
@@ -9,7 +9,7 @@ CREATE TABLE "project" (
 
 CREATE TABLE "project_environment" (
   "id" BIGSERIAL PRIMARY KEY,
-  "git_branch" VARCHAR NOT NULL,
+  "git_branch" VARCHAR(255) NOT NULL,
   "project_id" BIGINT NOT NULL,
   "description" TEXT,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
@@ -18,15 +18,15 @@ CREATE TABLE "project_environment" (
 
 CREATE TABLE "template" (
   "id" BIGSERIAL PRIMARY KEY,
-  "name" VARCHAR NOT NULL,
-  "path" VARCHAR NOT NULL,
-  "type" VARCHAR NOT NULL,
-);
+  "name" VARCHAR(255) NOT NULL,
+  "path" VARCHAR(255) NOT NULL,
+  "type" VARCHAR(255) NOT NULL
+);  -- Removed unnecessary comma
 
 CREATE TABLE "env_layer" (
   "id" BIGSERIAL PRIMARY KEY,
   "environment_id" BIGINT NOT NULL,
-  "s3_path" VARCHAR NOT NULL,
+  "s3_path" VARCHAR(255) NOT NULL,
   "template_id" BIGINT NOT NULL,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
@@ -34,7 +34,7 @@ CREATE TABLE "env_layer" (
 
 CREATE TABLE "process" (
   "id" BIGSERIAL PRIMARY KEY,
-  "name_of_argo_process" VARCHAR NOT NULL,
+  "name_of_argo_process" VARCHAR(255) NOT NULL,
   "currentstep" TEXT NOT NULL,
   "layer_id" BIGINT NOT NULL,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
@@ -54,7 +54,7 @@ CREATE TABLE "request" (
   "layer_id" BIGINT NOT NULL,
   "environment_id" BIGINT NOT NULL,
   "payload" JSON NOT NULL,
-  "status" VARCHAR NOT NULL,
+  "status" VARCHAR(255) NOT NULL,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
