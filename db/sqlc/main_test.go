@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5"
+	_ "github.com/lib/pq"
 )
 
 var testQueries *Queries
@@ -18,6 +19,7 @@ const (
 
 	
 func TestMain(m *testing.M){
+
 	conn,err:= pgx.Connect(context.Background(),dbSource)
 	if err!=nil{
 		log.Fatal("You cannot connect to db :", err)

@@ -3,6 +3,7 @@ CREATE TABLE "project" (
   "name" VARCHAR NOT NULL,
   "git_path" VARCHAR NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "description" TEXT
 );
 
@@ -11,13 +12,15 @@ CREATE TABLE "project_environment" (
   "git_branch" VARCHAR NOT NULL,
   "project_id" BIGINT NOT NULL,
   "description" TEXT,
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "template" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR NOT NULL,
-  "path" VARCHAR NOT NULL
+  "path" VARCHAR NOT NULL,
+  "type" VARCHAR NOT NULL,
 );
 
 CREATE TABLE "env_layer" (
@@ -25,6 +28,7 @@ CREATE TABLE "env_layer" (
   "environment_id" BIGINT NOT NULL,
   "s3_path" VARCHAR NOT NULL,
   "template_id" BIGINT NOT NULL,
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
 
@@ -33,6 +37,7 @@ CREATE TABLE "process" (
   "name_of_argo_process" VARCHAR NOT NULL,
   "currentstep" TEXT NOT NULL,
   "layer_id" BIGINT NOT NULL,
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
 
@@ -40,6 +45,7 @@ CREATE TABLE "notifications" (
   "id" BIGSERIAL PRIMARY KEY,
   "message" TEXT NOT NULL,
   "process_id" BIGINT NOT NULL,
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
 
@@ -49,6 +55,7 @@ CREATE TABLE "request" (
   "environment_id" BIGINT NOT NULL,
   "payload" JSON NOT NULL,
   "status" VARCHAR NOT NULL,
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
 

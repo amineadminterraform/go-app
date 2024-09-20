@@ -17,13 +17,13 @@ ORDER BY id
 LIMIT $1
 OFFSET $2
 ;
--- name: UpdateProject :exec
+-- name: UpdateProject :one
 UPDATE project
   set name = $2,
   git_path = $3,
   description = $4
-WHERE id = $1;
-
+WHERE id = $1 
+RETURNING *;
 -- name: DeleteProject :exec
 DELETE FROM project
 WHERE id = $1;
