@@ -23,6 +23,13 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.23'
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        until pg_isready -h localhost -p 5432 -U root; do
+          echo "Waiting for postgres..."
+          sleep 5
+        done
+          
     - name: Install golang migrate
       run: |
         curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
