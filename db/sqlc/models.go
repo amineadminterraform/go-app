@@ -8,27 +8,31 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type EnvLayer struct {
-	ID            int64              `json:"id"`
-	EnvironmentID int64              `json:"environment_id"`
-	S3Path        string             `json:"s3_path"`
-	TemplateID    int64              `json:"template_id"`
-	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+type ArgoWorkflow struct {
+	ID          int64              `json:"id"`
+	Name        string             `json:"name"`
+	Path        string             `json:"path"`
+	Description int64              `json:"description"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
 }
 
-type Notification struct {
-	ID        int64              `json:"id"`
-	Message   string             `json:"message"`
-	ProcessID int64              `json:"process_id"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
+type EnvLayer struct {
+	ID               int64              `json:"id"`
+	EnvironmentID    int64              `json:"environment_id"`
+	S3Path           string             `json:"s3_path"`
+	UpdatedAt        pgtype.Timestamptz `json:"updated_at"`
+	CreatedAt        pgtype.Timestamptz `json:"created_at"`
+	ProcessID        int64              `json:"process_id"`
+	CurrentRequestID pgtype.Int8        `json:"current_request_id"`
 }
 
 type Process struct {
-	ID                int64              `json:"id"`
-	NameOfArgoProcess string             `json:"name_of_argo_process"`
-	Currentstep       string             `json:"currentstep"`
-	LayerID           int64              `json:"layer_id"`
-	CreatedAt         pgtype.Timestamptz `json:"created_at"`
+	ID         int64              `json:"id"`
+	ArgoID     int64              `json:"argo_id"`
+	Name       string             `json:"name"`
+	CreatedAt  pgtype.Timestamptz `json:"created_at"`
+	TemplateID int64              `json:"template_id"`
 }
 
 type Project struct {
@@ -36,6 +40,7 @@ type Project struct {
 	Name        string             `json:"name"`
 	GitPath     string             `json:"git_path"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 	Description pgtype.Text        `json:"description"`
 }
 
@@ -44,6 +49,7 @@ type ProjectEnvironment struct {
 	GitBranch   string             `json:"git_branch"`
 	ProjectID   int64              `json:"project_id"`
 	Description pgtype.Text        `json:"description"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
 }
 
@@ -53,6 +59,7 @@ type Request struct {
 	EnvironmentID int64              `json:"environment_id"`
 	Payload       []byte             `json:"payload"`
 	Status        string             `json:"status"`
+	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
 }
 
@@ -60,4 +67,5 @@ type Template struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
 	Path string `json:"path"`
+	Type string `json:"type"`
 }

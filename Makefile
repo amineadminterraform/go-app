@@ -9,5 +9,7 @@ migratedown:
 sqlc: 
 	sqlc generate
 test:
-	go test -v  -cover ./...			 	
-.PHONY: createdb dropdb migrateup migratedown sqlc
+	go test -v  -cover ./...	
+server:
+	go run main.go		 	
+.PHONY: createdb dropdb migrateup migratedown sqlc test

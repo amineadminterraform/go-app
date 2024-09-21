@@ -7,33 +7,44 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createEnvLayer = `-- name: CreateEnvLayer :one
 INSERT INTO env_layer (
     environment_id,
     s3_path,
-    template_id
+    process_id,
+    current_request_id
 ) VALUES (
-    $1, $2, $3
-) RETURNING id, environment_id, s3_path, template_id, created_at
+    $1, $2, $3, $4
+) RETURNING id, environment_id, s3_path, updated_at, created_at, process_id, current_request_id
 `
 
 type CreateEnvLayerParams struct {
-	EnvironmentID int64  `json:"environment_id"`
-	S3Path        string `json:"s3_path"`
-	TemplateID    int64  `json:"template_id"`
+	EnvironmentID    int64       `json:"environment_id"`
+	S3Path           string      `json:"s3_path"`
+	ProcessID        int64       `json:"process_id"`
+	CurrentRequestID pgtype.Int8 `json:"current_request_id"`
 }
 
 func (q *Queries) CreateEnvLayer(ctx context.Context, arg CreateEnvLayerParams) (EnvLayer, error) {
-	row := q.db.QueryRow(ctx, createEnvLayer, arg.EnvironmentID, arg.S3Path, arg.TemplateID)
+	row := q.db.QueryRow(ctx, createEnvLayer,
+		arg.EnvironmentID,
+		arg.S3Path,
+		arg.ProcessID,
+		arg.CurrentRequestID,
+	)
 	var i EnvLayer
 	err := row.Scan(
 		&i.ID,
 		&i.EnvironmentID,
 		&i.S3Path,
-		&i.TemplateID,
+		&i.UpdatedAt,
 		&i.CreatedAt,
+		&i.ProcessID,
+		&i.CurrentRequestID,
 	)
 	return i, err
 }
@@ -49,7 +60,7 @@ func (q *Queries) DeleteEnvLayer(ctx context.Context, id int64) error {
 }
 
 const getEnvLayer = `-- name: GetEnvLayer :one
-SELECT id, environment_id, s3_path, template_id, created_at FROM env_layer
+SELECT id, environment_id, s3_path, updated_at, created_at, process_id, current_request_id FROM env_layer
 WHERE id = $1 LIMIT 1
 `
 
@@ -60,14 +71,16 @@ func (q *Queries) GetEnvLayer(ctx context.Context, id int64) (EnvLayer, error) {
 		&i.ID,
 		&i.EnvironmentID,
 		&i.S3Path,
-		&i.TemplateID,
+		&i.UpdatedAt,
 		&i.CreatedAt,
+		&i.ProcessID,
+		&i.CurrentRequestID,
 	)
 	return i, err
 }
 
 const listEnvLayers = `-- name: ListEnvLayers :many
-SELECT id, environment_id, s3_path, template_id, created_at FROM env_layer
+SELECT id, environment_id, s3_path, updated_at, created_at, process_id, current_request_id FROM env_layer
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -84,15 +97,17 @@ func (q *Queries) ListEnvLayers(ctx context.Context, arg ListEnvLayersParams) ([
 		return nil, err
 	}
 	defer rows.Close()
-	var items []EnvLayer
+	items := []EnvLayer{}
 	for rows.Next() {
 		var i EnvLayer
 		if err := rows.Scan(
 			&i.ID,
 			&i.EnvironmentID,
 			&i.S3Path,
-			&i.TemplateID,
+			&i.UpdatedAt,
 			&i.CreatedAt,
+			&i.ProcessID,
+			&i.CurrentRequestID,
 		); err != nil {
 			return nil, err
 		}
@@ -106,25 +121,26 @@ func (q *Queries) ListEnvLayers(ctx context.Context, arg ListEnvLayersParams) ([
 
 const updateEnvLayer = `-- name: UpdateEnvLayer :exec
 UPDATE env_layer
-  set environment_id = $2,
-  s3_path = $3,
-  template_id = $4
-WHERE id = $1
+  set s3_path = $2,
+  process_id = $3,
+  current_request_id = $4,
+  updated_at = now()
+  WHERE id = $1
 `
 
 type UpdateEnvLayerParams struct {
-	ID            int64  `json:"id"`
-	EnvironmentID int64  `json:"environment_id"`
-	S3Path        string `json:"s3_path"`
-	TemplateID    int64  `json:"template_id"`
+	ID               int64       `json:"id"`
+	S3Path           string      `json:"s3_path"`
+	ProcessID        int64       `json:"process_id"`
+	CurrentRequestID pgtype.Int8 `json:"current_request_id"`
 }
 
 func (q *Queries) UpdateEnvLayer(ctx context.Context, arg UpdateEnvLayerParams) error {
 	_, err := q.db.Exec(ctx, updateEnvLayer,
 		arg.ID,
-		arg.EnvironmentID,
 		arg.S3Path,
-		arg.TemplateID,
+		arg.ProcessID,
+		arg.CurrentRequestID,
 	)
 	return err
 }

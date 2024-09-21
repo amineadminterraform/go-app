@@ -18,7 +18,7 @@ INSERT INTO project_environment (
     description
 ) VALUES (
     $1, $2, $3
-) RETURNING id, git_branch, project_id, description, created_at
+) RETURNING id, git_branch, project_id, description, updated_at, created_at
 `
 
 type CreateProjectEnvironmentParams struct {
@@ -35,6 +35,7 @@ func (q *Queries) CreateProjectEnvironment(ctx context.Context, arg CreateProjec
 		&i.GitBranch,
 		&i.ProjectID,
 		&i.Description,
+		&i.UpdatedAt,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -51,7 +52,7 @@ func (q *Queries) DeleteProjectEnvironment(ctx context.Context, id int64) error 
 }
 
 const getProjectEnvironment = `-- name: GetProjectEnvironment :one
-SELECT id, git_branch, project_id, description, created_at FROM project_environment
+SELECT id, git_branch, project_id, description, updated_at, created_at FROM project_environment
 WHERE id = $1 LIMIT 1
 `
 
@@ -63,13 +64,14 @@ func (q *Queries) GetProjectEnvironment(ctx context.Context, id int64) (ProjectE
 		&i.GitBranch,
 		&i.ProjectID,
 		&i.Description,
+		&i.UpdatedAt,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const listProjectEnvironments = `-- name: ListProjectEnvironments :many
-SELECT id, git_branch, project_id, description, created_at FROM project_environment
+SELECT id, git_branch, project_id, description, updated_at, created_at FROM project_environment
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -86,7 +88,7 @@ func (q *Queries) ListProjectEnvironments(ctx context.Context, arg ListProjectEn
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ProjectEnvironment
+	items := []ProjectEnvironment{}
 	for rows.Next() {
 		var i ProjectEnvironment
 		if err := rows.Scan(
@@ -94,6 +96,7 @@ func (q *Queries) ListProjectEnvironments(ctx context.Context, arg ListProjectEn
 			&i.GitBranch,
 			&i.ProjectID,
 			&i.Description,
+			&i.UpdatedAt,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -110,7 +113,8 @@ const updateProjectEnvironment = `-- name: UpdateProjectEnvironment :exec
 UPDATE project_environment
   set git_branch = $2,
   project_id = $3,
-  description = $4
+  description = $4,
+  updated_at = now()
 WHERE id = $1
 `
 

@@ -18,7 +18,7 @@ INSERT INTO project (
     description
 ) VALUES (
     $1, $2, $3
-) RETURNING id, name, git_path, created_at, description
+) RETURNING id, name, git_path, created_at, updated_at, description
 `
 
 type CreateProjectParams struct {
@@ -35,6 +35,7 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 		&i.Name,
 		&i.GitPath,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.Description,
 	)
 	return i, err
@@ -51,7 +52,7 @@ func (q *Queries) DeleteProject(ctx context.Context, id int64) error {
 }
 
 const getProject = `-- name: GetProject :one
-SELECT id, name, git_path, created_at, description FROM project
+SELECT id, name, git_path, created_at, updated_at, description FROM project
 WHERE id = $1 LIMIT 1
 `
 
@@ -63,13 +64,14 @@ func (q *Queries) GetProject(ctx context.Context, id int64) (Project, error) {
 		&i.Name,
 		&i.GitPath,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.Description,
 	)
 	return i, err
 }
 
 const listProjects = `-- name: ListProjects :many
-SELECT id, name, git_path, created_at, description FROM project
+SELECT id, name, git_path, created_at, updated_at, description FROM project
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -86,7 +88,7 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]P
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Project
+	items := []Project{}
 	for rows.Next() {
 		var i Project
 		if err := rows.Scan(
@@ -94,6 +96,7 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]P
 			&i.Name,
 			&i.GitPath,
 			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.Description,
 		); err != nil {
 			return nil, err
@@ -106,12 +109,14 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]P
 	return items, nil
 }
 
-const updateProject = `-- name: UpdateProject :exec
+const updateProject = `-- name: UpdateProject :one
 UPDATE project
   set name = $2,
   git_path = $3,
-  description = $4
-WHERE id = $1
+  description = $4,
+  updated_at = now()
+WHERE id = $1 
+RETURNING id, name, git_path, created_at, updated_at, description
 `
 
 type UpdateProjectParams struct {
@@ -121,12 +126,21 @@ type UpdateProjectParams struct {
 	Description pgtype.Text `json:"description"`
 }
 
-func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) error {
-	_, err := q.db.Exec(ctx, updateProject,
+func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) (Project, error) {
+	row := q.db.QueryRow(ctx, updateProject,
 		arg.ID,
 		arg.Name,
 		arg.GitPath,
 		arg.Description,
 	)
-	return err
+	var i Project
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.GitPath,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Description,
+	)
+	return i, err
 }

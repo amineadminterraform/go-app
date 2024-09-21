@@ -12,21 +12,28 @@ import (
 const createTemplate = `-- name: CreateTemplate :one
 INSERT INTO template (
     name,
-    path
+    path,
+    type
 ) VALUES (
-    $1, $2
-) RETURNING id, name, path
+    $1, $2 , $3
+) RETURNING id, name, path, type
 `
 
 type CreateTemplateParams struct {
 	Name string `json:"name"`
 	Path string `json:"path"`
+	Type string `json:"type"`
 }
 
 func (q *Queries) CreateTemplate(ctx context.Context, arg CreateTemplateParams) (Template, error) {
-	row := q.db.QueryRow(ctx, createTemplate, arg.Name, arg.Path)
+	row := q.db.QueryRow(ctx, createTemplate, arg.Name, arg.Path, arg.Type)
 	var i Template
-	err := row.Scan(&i.ID, &i.Name, &i.Path)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Path,
+		&i.Type,
+	)
 	return i, err
 }
 
@@ -41,19 +48,24 @@ func (q *Queries) DeleteTemplate(ctx context.Context, id int64) error {
 }
 
 const getTemplate = `-- name: GetTemplate :one
-SELECT id, name, path FROM template
+SELECT id, name, path, type FROM template
 WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetTemplate(ctx context.Context, id int64) (Template, error) {
 	row := q.db.QueryRow(ctx, getTemplate, id)
 	var i Template
-	err := row.Scan(&i.ID, &i.Name, &i.Path)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Path,
+		&i.Type,
+	)
 	return i, err
 }
 
 const listTemplates = `-- name: ListTemplates :many
-SELECT id, name, path FROM template
+SELECT id, name, path, type FROM template
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -70,10 +82,15 @@ func (q *Queries) ListTemplates(ctx context.Context, arg ListTemplatesParams) ([
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Template
+	items := []Template{}
 	for rows.Next() {
 		var i Template
-		if err := rows.Scan(&i.ID, &i.Name, &i.Path); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Path,
+			&i.Type,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -87,7 +104,8 @@ func (q *Queries) ListTemplates(ctx context.Context, arg ListTemplatesParams) ([
 const updateTemplate = `-- name: UpdateTemplate :exec
 UPDATE template
   set name = $2,
-  path = $3
+  path = $3,
+  type = $4
 WHERE id = $1
 `
 
@@ -95,9 +113,15 @@ type UpdateTemplateParams struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
 	Path string `json:"path"`
+	Type string `json:"type"`
 }
 
 func (q *Queries) UpdateTemplate(ctx context.Context, arg UpdateTemplateParams) error {
-	_, err := q.db.Exec(ctx, updateTemplate, arg.ID, arg.Name, arg.Path)
+	_, err := q.db.Exec(ctx, updateTemplate,
+		arg.ID,
+		arg.Name,
+		arg.Path,
+		arg.Type,
+	)
 	return err
 }

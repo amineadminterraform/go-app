@@ -21,7 +21,8 @@ OFFSET $2
 UPDATE project
   set name = $2,
   git_path = $3,
-  description = $4
+  description = $4,
+  updated_at = now()
 WHERE id = $1 
 RETURNING *;
 -- name: DeleteProject :exec

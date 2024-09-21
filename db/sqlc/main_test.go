@@ -6,26 +6,28 @@ import (
 	"os"
 	"testing"
 
+	"github.com/amineadminterraform/go-app/utils"
 	"github.com/jackc/pgx/v5"
 	_ "github.com/lib/pq"
 )
 
 var testQueries *Queries
 
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/platform_transactions?sslmode=disable" 
-)
+
 
 	
 func TestMain(m *testing.M){
-
-	conn,err:= pgx.Connect(context.Background(),dbSource)
+	
+	Config , err:= utils.LoadConfig("../../")
+	if err != nil{
+		log.Fatal("cannot load config :", err)
+	}
+	testDB,err:= pgx.Connect(context.Background(),Config.DBSource)
 	if err!=nil{
 		log.Fatal("You cannot connect to db :", err)
 	}
-	defer conn.Close(context.Background())
-	testQueries= New(conn)
+	defer testDB.Close(context.Background())
+	testQueries= New(testDB)
 	os.Exit(m.Run())
 }
 

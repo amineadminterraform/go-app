@@ -1,18 +1,10 @@
-
-CREATE TABLE "template" (
-  "id" BIGSERIAL PRIMARY KEY,
-  "name" VARCHAR NOT NULL,
-  "path" VARCHAR NOT NULL
-);
-
-
-
 -- name: CreateTemplate :one
 INSERT INTO template (
     name,
-    path
+    path,
+    type
 ) VALUES (
-    $1, $2
+    $1, $2 , $3
 ) RETURNING *;
 
 -- name: GetTemplate :one
@@ -28,7 +20,8 @@ OFFSET $2
 -- name: UpdateTemplate :exec
 UPDATE template
   set name = $2,
-  path = $3
+  path = $3,
+  type = $4
 WHERE id = $1;
 
 -- name: DeleteTemplate :exec

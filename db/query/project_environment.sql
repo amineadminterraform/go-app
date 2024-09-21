@@ -1,4 +1,5 @@
 
+
 -- name: CreateProjectEnvironment :one
 INSERT INTO project_environment (
     git_branch,
@@ -22,7 +23,8 @@ OFFSET $2
 UPDATE project_environment
   set git_branch = $2,
   project_id = $3,
-  description = $4
+  description = $4,
+  updated_at = now()
 WHERE id = $1;
 
 -- name: DeleteProjectEnvironment :exec

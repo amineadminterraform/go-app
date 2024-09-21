@@ -51,7 +51,7 @@ func TestUpdateProject(t *testing.T){
 		GitPath: utils.RandomGit(),
 		Description: utils.RandomDescription(),
 	}
-	err := testQueries.UpdateProject(context.Background(), arg)
+	_,err := testQueries.UpdateProject(context.Background(), arg)
 	require.NoError(t, err)
 	project2, err2 := testQueries.GetProject(context.Background(),project1.ID)
 	
