@@ -1,7 +1,7 @@
 -- name: CreateRequest :one
 INSERT INTO request (
     layer_id,
-    environment_id,
+    source,
     payload,
     status
 ) VALUES (
@@ -21,10 +21,10 @@ OFFSET $2
 -- name: UpdateRequest :exec
 UPDATE request
   set layer_id = $2,
-    environment_id = $3,
+    source = $3,
     payload = $4,
     status= $5,
-  updated_at = now()
+    updated_at = now()
 WHERE id = $1;
 
 -- name: DeleteRequest :exec

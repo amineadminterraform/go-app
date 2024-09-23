@@ -6,7 +6,6 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	_ "github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 // Store provides all functions to executes queries and transactions
@@ -61,31 +60,31 @@ type StatusTXResult struct {
 
 // StatusTx updates the status of a request
 // it will look for the full entries for the layer and the request and it will update the current request in the layer table according the status values
-func (store *SQLStore) StatusTx(ctx context.Context, arg StatusTxParams) (StatusTXResult, error) {
-	var result StatusTXResult
-	err := store.execTx(ctx, func(q *Queries) error {
-		full_request, err1 := q.GetRequest(ctx, arg.RequestID)
-		if err1 != nil {
-			return err1
-		}
-		full_layer, err1 := q.GetEnvLayer(ctx, full_request.EnvironmentID)
-		if err1 != nil {
-			return err1
-		}
-		if arg.Status == "Error" || arg.Status == "Finished" {
-			err := q.UpdateEnvLayer(ctx, UpdateEnvLayerParams{
-				ID:               full_request.EnvironmentID,
-				S3Path:           full_layer.S3Path,
-				ProcessID:        full_layer.ProcessID,
-				CurrentRequestID: pgtype.Int8{},
-			})
-			if err != nil {
-				return err
-			}
-		}
+// func (store *SQLStore) StatusTx(ctx context.Context, arg StatusTxParams) (StatusTXResult, error) {
+// 	var result StatusTXResult
+// 	err := store.execTx(ctx, func(q *Queries) error {
+// 		full_request, err1 := q.GetRequest(ctx, arg.RequestID)
+// 		if err1 != nil {
+// 			return err1
+// 		}
+// 		full_layer, err1 := q.GetEnvLayer(ctx, full_request.EnvironmentID)
+// 		if err1 != nil {
+// 			return err1
+// 		}
+// 		if arg.Status == "Error" || arg.Status == "Finished" {
+// 			err := q.UpdateEnvLayer(ctx, UpdateEnvLayerParams{
+// 				ID:               full_request.EnvironmentID,
+// 				S3Path:           full_layer.S3Path,
+// 				ProcessID:        full_layer.ProcessID,
+// 				CurrentRequestID: pgtype.Int8{},
+// 			})
+// 			if err != nil {
+// 				return err
+// 			}
+// 		}
 
-		return nil
-	})
-	return result, err
+// 		return nil
+// 	})
+// 	return result, err
 
-}
+// }

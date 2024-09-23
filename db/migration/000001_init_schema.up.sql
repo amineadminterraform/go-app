@@ -37,6 +37,7 @@ CREATE TABLE "process" (
   "argo_id" BIGINT NOT NULL,
   "name" VARCHAR(255) NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "template_id" BIGINT NOT NULL
   );
 
@@ -44,7 +45,7 @@ CREATE TABLE "argo_workflow" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL,
   "path" VARCHAR(255) NOT NULL,
-  "description" BIGINT NOT NULL,
+  "description" TEXT,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
@@ -53,8 +54,8 @@ CREATE TABLE "argo_workflow" (
 CREATE TABLE "request" (
   "id" BIGSERIAL PRIMARY KEY,
   "layer_id" BIGINT NOT NULL,
-  "environment_id" BIGINT NOT NULL,
-  "payload" JSON NOT NULL,
+  "source" VARCHAR(255) NOT NULL,
+  "payload" VARCHAR(255) NOT NULL,
   "status" VARCHAR(255) NOT NULL,
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
@@ -66,16 +67,16 @@ CREATE INDEX ON "project_environment" ("project_id");
 
 CREATE INDEX ON "request" ("layer_id");
 
-ALTER TABLE "project_environment" ADD FOREIGN KEY ("project_id") REFERENCES "project" ("id");
+ALTER TABLE "project_environment" ADD FOREIGN KEY ("project_id") REFERENCES "project" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "env_layer" ADD FOREIGN KEY ("environment_id") REFERENCES "project_environment" ("id");
+ALTER TABLE "env_layer" ADD FOREIGN KEY ("environment_id") REFERENCES "project_environment" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "env_layer" ADD FOREIGN KEY ("process_id") REFERENCES "process" ("id");
+ALTER TABLE "env_layer" ADD FOREIGN KEY ("process_id") REFERENCES "process" ("id") ON DELETE CASCADE ;
 
 
 
-ALTER TABLE "request" ADD FOREIGN KEY ("layer_id") REFERENCES "env_layer" ("id");
+ALTER TABLE "request" ADD FOREIGN KEY ("layer_id") REFERENCES "env_layer" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "process" ADD FOREIGN KEY ("argo_id") REFERENCES "argo_workflow" ("id");
+ALTER TABLE "process" ADD FOREIGN KEY ("argo_id") REFERENCES "argo_workflow" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "process" ADD FOREIGN KEY ("template_id") REFERENCES "template" ("id");
+ALTER TABLE "process" ADD FOREIGN KEY ("template_id") REFERENCES "template" ("id") ON DELETE CASCADE;

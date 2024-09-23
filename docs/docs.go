@@ -15,6 +15,320 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/argoworkflow": {
+            "post": {
+                "description": "Create a ArgoWorkflow and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new ArgoWorkflow",
+                "parameters": [
+                    {
+                        "description": "Create ArgoWorkflow",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateArgoWorkflowRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerArgoWorkflow"
+                        }
+                    }
+                }
+            }
+        },
+        "/argoworkflow/{id}": {
+            "get": {
+                "description": "Get a ArgoWorkflow according to their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a ArgoWorkflow",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ArgoWorkflow ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Get a ArgoWorkflow from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a ArgoWorkflow with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ArgoWorkflow ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a ArgoWorkflow from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a ArgoWorkflow with a specified id",
+                "parameters": [
+                    {
+                        "description": "update ArgoWorkflow",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateArgoWorkflowRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ArgoWorkflow ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/argoworkflows": {
+            "get": {
+                "description": "List ArgoWorkflows according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all ArgoWorkflows",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/envlayer": {
+            "post": {
+                "description": "Create a EnvLayer and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new EnvLayer",
+                "parameters": [
+                    {
+                        "description": "Create EnvLayer",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateEnvLayerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerEnvLayer"
+                        }
+                    }
+                }
+            }
+        },
+        "/envlayer/{id}": {
+            "delete": {
+                "description": "Get a EnvLayer from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a EnvLayer with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "EnvLayer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a EnvLayer from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a EnvLayer with a specified id",
+                "parameters": [
+                    {
+                        "description": "update EnvLayer",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateEnvLayerRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "EnvLayer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/envlayers": {
+            "get": {
+                "description": "List EnvLayers according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all EnvLayers",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/process": {
+            "post": {
+                "description": "Create a Process and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new Process",
+                "parameters": [
+                    {
+                        "description": "Create Process",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateProcessRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerProcess"
+                        }
+                    }
+                }
+            }
+        },
+        "/process/{id}": {
+            "delete": {
+                "description": "Get a Process from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a Process with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Process ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a Process from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a Process with a specified id",
+                "parameters": [
+                    {
+                        "description": "update Process",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateProcessRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Process ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/processes": {
+            "get": {
+                "description": "List Processs according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all Processs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/project": {
             "post": {
                 "description": "Create a project and saves it in postgresql",
@@ -105,6 +419,122 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/projectenv": {
+            "post": {
+                "description": "Create a ProjectEnvironment and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new ProjectEnvironment",
+                "parameters": [
+                    {
+                        "description": "Create ProjectEnvironment",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateProjectEnvironmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerProjectEnvironment"
+                        }
+                    }
+                }
+            }
+        },
+        "/projectenv/{id}": {
+            "get": {
+                "description": "Get a ProjectEnvironment according to their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a ProjectEnvironment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ProjectEnvironment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Get a ProjectEnvironment from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a ProjectEnvironment with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ProjectEnvironment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a ProjectEnvironment from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a ProjectEnvironment with a specified id",
+                "parameters": [
+                    {
+                        "description": "update ProjectEnvironment",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateProjectEnvironmentRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ProjectEnvironment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/projectenvs": {
+            "get": {
+                "description": "List ProjectEnvironments according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all ProjectEnvironments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/projects": {
             "get": {
                 "description": "List projects according to the page_id and page_size",
@@ -115,7 +545,222 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Page ID",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/request": {
+            "post": {
+                "description": "Create a Request and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new Request",
+                "parameters": [
+                    {
+                        "description": "Create Request",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateRequestRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/request/{id}": {
+            "delete": {
+                "description": "Get a Request from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a Request with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a Request from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a Request with a specified id",
+                "parameters": [
+                    {
+                        "description": "update Request",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateRequestRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Request ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/requests": {
+            "get": {
+                "description": "List Requests according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all Requests",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
+                        "name": "page_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/template": {
+            "post": {
+                "description": "Create a Template and saves it in postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new Template",
+                "parameters": [
+                    {
+                        "description": "Create Template",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateTemplateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.SwaggerTemplate"
+                        }
+                    }
+                }
+            }
+        },
+        "/template/{id}": {
+            "get": {
+                "description": "Get a Template according to their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a Template",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Get a Template from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a Template with a specified id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update a Template from postgresql",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "update a Template with a specified id",
+                "parameters": [
+                    {
+                        "description": "update Template",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UpdateTemplateRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Template ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/templates": {
+            "get": {
+                "description": "List Templates according to the page_id and page_size",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List all Templates",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PageID",
                         "name": "page_id",
                         "in": "query",
                         "required": true
@@ -133,6 +778,54 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "api.CreateArgoWorkflowRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.CreateEnvLayerRequest": {
+            "type": "object"
+        },
+        "api.CreateProcessRequest": {
+            "type": "object",
+            "properties": {
+                "argo_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "template_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.CreateProjectEnvironmentRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "git_path": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "api.CreateProjectRequest": {
             "type": "object",
             "required": [
@@ -146,6 +839,112 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.CreateRequestRequest": {
+            "type": "object",
+            "properties": {
+                "layer_id": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.CreateTemplateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "git_path": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.SwaggerArgoWorkflow": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.SwaggerEnvLayer": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "current_request_id": {
+                    "type": "integer"
+                },
+                "environment_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "process_id": {
+                    "type": "integer"
+                },
+                "s3_path": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.SwaggerProcess": {
+            "type": "object",
+            "properties": {
+                "argo_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "template_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -171,6 +970,123 @@ const docTemplate = `{
                 }
             }
         },
+        "api.SwaggerProjectEnvironment": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "git_branch": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.SwaggerRequest": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "layer_id": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.SwaggerTemplate": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UpdateArgoWorkflowRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "git_path": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UpdateEnvLayerRequest": {
+            "type": "object"
+        },
+        "api.UpdateProcessRequest": {
+            "type": "object",
+            "properties": {
+                "argo_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "template_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.UpdateProjectEnvironmentRequest": {
+            "type": "object",
+            "required": [
+                "project_id"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "git_brancg": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "api.UpdateProjectRequest": {
             "type": "object",
             "required": [
@@ -184,6 +1100,40 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UpdateRequestRequest": {
+            "type": "object",
+            "properties": {
+                "layer_id": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.UpdateTemplateRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "git_path": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

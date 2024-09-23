@@ -12,7 +12,7 @@ type ArgoWorkflow struct {
 	ID          int64              `json:"id"`
 	Name        string             `json:"name"`
 	Path        string             `json:"path"`
-	Description int64              `json:"description"`
+	Description pgtype.Text        `json:"description"`
 	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
 }
@@ -32,6 +32,7 @@ type Process struct {
 	ArgoID     int64              `json:"argo_id"`
 	Name       string             `json:"name"`
 	CreatedAt  pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
 	TemplateID int64              `json:"template_id"`
 }
 
@@ -54,13 +55,13 @@ type ProjectEnvironment struct {
 }
 
 type Request struct {
-	ID            int64              `json:"id"`
-	LayerID       int64              `json:"layer_id"`
-	EnvironmentID int64              `json:"environment_id"`
-	Payload       []byte             `json:"payload"`
-	Status        string             `json:"status"`
-	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
-	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+	ID        int64              `json:"id"`
+	LayerID   int64              `json:"layer_id"`
+	Source    string             `json:"source"`
+	Payload   string             `json:"payload"`
+	Status    string             `json:"status"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
 }
 
 type Template struct {

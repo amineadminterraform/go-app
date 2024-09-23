@@ -24,7 +24,7 @@ func createRandomProject(t *testing.T) Project {
 	require.Equal(t, arg.Description, project.Description)
 	require.NotZero(t, project.ID)
 	require.NotZero(t, project.CreatedAt)
-	//require.NotZero(t, created_at)
+	require.NotZero(t, project.UpdatedAt)
 	return project
 }
 

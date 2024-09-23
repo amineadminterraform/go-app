@@ -25,5 +25,5 @@ UPDATE template
 WHERE id = $1;
 
 -- name: DeleteTemplate :exec
-DELETE FROM project_environment
+DELETE FROM template
 WHERE id = $1;

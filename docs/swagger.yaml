@@ -1,5 +1,36 @@
 basePath: /
 definitions:
+  api.CreateArgoWorkflowRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+    required:
+    - name
+    type: object
+  api.CreateEnvLayerRequest:
+    type: object
+  api.CreateProcessRequest:
+    properties:
+      argo_id:
+        type: integer
+      name:
+        type: string
+      template_id:
+        type: integer
+    type: object
+  api.CreateProjectEnvironmentRequest:
+    properties:
+      description:
+        type: string
+      git_path:
+        type: string
+      project_id:
+        type: integer
+    type: object
   api.CreateProjectRequest:
     properties:
       description:
@@ -10,6 +41,75 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  api.CreateRequestRequest:
+    properties:
+      layer_id:
+        type: integer
+      payload:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+    type: object
+  api.CreateTemplateRequest:
+    properties:
+      git_path:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - name
+    type: object
+  api.SwaggerArgoWorkflow:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      path:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  api.SwaggerEnvLayer:
+    properties:
+      created_at:
+        type: string
+      current_request_id:
+        type: integer
+      environment_id:
+        type: integer
+      id:
+        type: integer
+      process_id:
+        type: integer
+      s3_path:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  api.SwaggerProcess:
+    properties:
+      argo_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      template_id:
+        type: integer
+      updated_at:
+        type: string
     type: object
   api.SwaggerProject:
     properties:
@@ -25,6 +125,82 @@ definitions:
       name:
         type: string
     type: object
+  api.SwaggerProjectEnvironment:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      git_branch:
+        type: string
+      id:
+        type: integer
+      project_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  api.SwaggerRequest:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      layer_id:
+        type: integer
+      payload:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  api.SwaggerTemplate:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      path:
+        type: string
+      type:
+        type: string
+    type: object
+  api.UpdateArgoWorkflowRequest:
+    properties:
+      description:
+        type: string
+      git_path:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  api.UpdateEnvLayerRequest:
+    type: object
+  api.UpdateProcessRequest:
+    properties:
+      argo_id:
+        type: integer
+      name:
+        type: string
+      template_id:
+        type: integer
+    type: object
+  api.UpdateProjectEnvironmentRequest:
+    properties:
+      description:
+        type: string
+      git_brancg:
+        type: string
+      project_id:
+        type: integer
+    required:
+    - project_id
+    type: object
   api.UpdateProjectRequest:
     properties:
       description:
@@ -36,6 +212,28 @@ definitions:
     required:
     - name
     type: object
+  api.UpdateRequestRequest:
+    properties:
+      layer_id:
+        type: integer
+      payload:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+    type: object
+  api.UpdateTemplateRequest:
+    properties:
+      git_path:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    required:
+    - name
+    type: object
 host: localhost:8000
 info:
   contact: {}
@@ -43,6 +241,219 @@ info:
   title: PLATFORM OPERATIONS API
   version: "1.0"
 paths:
+  /argoworkflow:
+    post:
+      description: Create a ArgoWorkflow and saves it in postgresql
+      parameters:
+      - description: Create ArgoWorkflow
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateArgoWorkflowRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerArgoWorkflow'
+      summary: Create a new ArgoWorkflow
+  /argoworkflow/{id}:
+    delete:
+      description: Get a ArgoWorkflow from postgresql
+      parameters:
+      - description: ArgoWorkflow ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a ArgoWorkflow with a specified id
+    get:
+      description: Get a ArgoWorkflow according to their ID
+      parameters:
+      - description: ArgoWorkflow ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a ArgoWorkflow
+    patch:
+      description: update a ArgoWorkflow from postgresql
+      parameters:
+      - description: update ArgoWorkflow
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateArgoWorkflowRequest'
+      - description: ArgoWorkflow ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a ArgoWorkflow with a specified id
+  /argoworkflows:
+    get:
+      description: List ArgoWorkflows according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all ArgoWorkflows
+  /envlayer:
+    post:
+      description: Create a EnvLayer and saves it in postgresql
+      parameters:
+      - description: Create EnvLayer
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateEnvLayerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerEnvLayer'
+      summary: Create a new EnvLayer
+  /envlayer/{id}:
+    delete:
+      description: Get a EnvLayer from postgresql
+      parameters:
+      - description: EnvLayer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a EnvLayer with a specified id
+    patch:
+      description: update a EnvLayer from postgresql
+      parameters:
+      - description: update EnvLayer
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateEnvLayerRequest'
+      - description: EnvLayer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a EnvLayer with a specified id
+  /envlayers:
+    get:
+      description: List EnvLayers according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all EnvLayers
+  /process:
+    post:
+      description: Create a Process and saves it in postgresql
+      parameters:
+      - description: Create Process
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProcessRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerProcess'
+      summary: Create a new Process
+  /process/{id}:
+    delete:
+      description: Get a Process from postgresql
+      parameters:
+      - description: Process ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a Process with a specified id
+    patch:
+      description: update a Process from postgresql
+      parameters:
+      - description: update Process
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateProcessRequest'
+      - description: Process ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a Process with a specified id
+  /processes:
+    get:
+      description: List Processs according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all Processs
   /project:
     post:
       description: Create a project and saves it in postgresql
@@ -104,11 +515,90 @@ paths:
       - application/json
       responses: {}
       summary: update a project with a specified id
+  /projectenv:
+    post:
+      description: Create a ProjectEnvironment and saves it in postgresql
+      parameters:
+      - description: Create ProjectEnvironment
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProjectEnvironmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerProjectEnvironment'
+      summary: Create a new ProjectEnvironment
+  /projectenv/{id}:
+    delete:
+      description: Get a ProjectEnvironment from postgresql
+      parameters:
+      - description: ProjectEnvironment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a ProjectEnvironment with a specified id
+    get:
+      description: Get a ProjectEnvironment according to their ID
+      parameters:
+      - description: ProjectEnvironment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a ProjectEnvironment
+    patch:
+      description: update a ProjectEnvironment from postgresql
+      parameters:
+      - description: update ProjectEnvironment
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateProjectEnvironmentRequest'
+      - description: ProjectEnvironment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a ProjectEnvironment with a specified id
+  /projectenvs:
+    get:
+      description: List ProjectEnvironments according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all ProjectEnvironments
   /projects:
     get:
       description: List projects according to the page_id and page_size
       parameters:
-      - description: Page ID
+      - description: PageID
         in: query
         name: page_id
         required: true
@@ -122,4 +612,150 @@ paths:
       - application/json
       responses: {}
       summary: List all projects
+  /request:
+    post:
+      description: Create a Request and saves it in postgresql
+      parameters:
+      - description: Create Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateRequestRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerRequest'
+      summary: Create a new Request
+  /request/{id}:
+    delete:
+      description: Get a Request from postgresql
+      parameters:
+      - description: Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a Request with a specified id
+    patch:
+      description: update a Request from postgresql
+      parameters:
+      - description: update Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateRequestRequest'
+      - description: Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a Request with a specified id
+  /requests:
+    get:
+      description: List Requests according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all Requests
+  /template:
+    post:
+      description: Create a Template and saves it in postgresql
+      parameters:
+      - description: Create Template
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateTemplateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerTemplate'
+      summary: Create a new Template
+  /template/{id}:
+    delete:
+      description: Get a Template from postgresql
+      parameters:
+      - description: Template ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a Template with a specified id
+    get:
+      description: Get a Template according to their ID
+      parameters:
+      - description: Template ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a Template
+    patch:
+      description: update a Template from postgresql
+      parameters:
+      - description: update Template
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateTemplateRequest'
+      - description: Template ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a Template with a specified id
+  /templates:
+    get:
+      description: List Templates according to the page_id and page_size
+      parameters:
+      - description: PageID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all Templates
 swagger: "2.0"

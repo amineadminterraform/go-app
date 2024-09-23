@@ -1,12 +1,3 @@
-CREATE TABLE "env_layer" (
-  "id" BIGSERIAL PRIMARY KEY,
-  "environment_id" BIGINT NOT NULL,
-  "s3_path" VARCHAR(255) NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
-  "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
-  "process_id" BIGINT NOT NULL,
-  "current_request_id" BIGINT 
-  );
 
 
 -- name: CreateEnvLayer :one

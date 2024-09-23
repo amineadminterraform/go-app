@@ -38,7 +38,7 @@ func (q *Queries) CreateTemplate(ctx context.Context, arg CreateTemplateParams) 
 }
 
 const deleteTemplate = `-- name: DeleteTemplate :exec
-DELETE FROM project_environment
+DELETE FROM template
 WHERE id = $1
 `
 

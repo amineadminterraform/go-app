@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createArgoWorkflow = `-- name: CreateArgoWorkflow :one
@@ -20,9 +22,9 @@ INSERT INTO argo_workflow (
 `
 
 type CreateArgoWorkflowParams struct {
-	Name        string `json:"name"`
-	Path        string `json:"path"`
-	Description int64  `json:"description"`
+	Name        string      `json:"name"`
+	Path        string      `json:"path"`
+	Description pgtype.Text `json:"description"`
 }
 
 func (q *Queries) CreateArgoWorkflow(ctx context.Context, arg CreateArgoWorkflowParams) (ArgoWorkflow, error) {
@@ -117,10 +119,10 @@ WHERE id = $1
 `
 
 type UpdateArgoWorkflowParams struct {
-	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Path        string `json:"path"`
-	Description int64  `json:"description"`
+	ID          int64       `json:"id"`
+	Name        string      `json:"name"`
+	Path        string      `json:"path"`
+	Description pgtype.Text `json:"description"`
 }
 
 func (q *Queries) UpdateArgoWorkflow(ctx context.Context, arg UpdateArgoWorkflowParams) error {

@@ -12,25 +12,25 @@ import (
 const createRequest = `-- name: CreateRequest :one
 INSERT INTO request (
     layer_id,
-    environment_id,
+    source,
     payload,
     status
 ) VALUES (
     $1, $2, $3, $4
-) RETURNING id, layer_id, environment_id, payload, status, updated_at, created_at
+) RETURNING id, layer_id, source, payload, status, updated_at, created_at
 `
 
 type CreateRequestParams struct {
-	LayerID       int64  `json:"layer_id"`
-	EnvironmentID int64  `json:"environment_id"`
-	Payload       []byte `json:"payload"`
-	Status        string `json:"status"`
+	LayerID int64  `json:"layer_id"`
+	Source  string `json:"source"`
+	Payload string `json:"payload"`
+	Status  string `json:"status"`
 }
 
 func (q *Queries) CreateRequest(ctx context.Context, arg CreateRequestParams) (Request, error) {
 	row := q.db.QueryRow(ctx, createRequest,
 		arg.LayerID,
-		arg.EnvironmentID,
+		arg.Source,
 		arg.Payload,
 		arg.Status,
 	)
@@ -38,7 +38,7 @@ func (q *Queries) CreateRequest(ctx context.Context, arg CreateRequestParams) (R
 	err := row.Scan(
 		&i.ID,
 		&i.LayerID,
-		&i.EnvironmentID,
+		&i.Source,
 		&i.Payload,
 		&i.Status,
 		&i.UpdatedAt,
@@ -58,7 +58,7 @@ func (q *Queries) DeleteRequest(ctx context.Context, id int64) error {
 }
 
 const getRequest = `-- name: GetRequest :one
-SELECT id, layer_id, environment_id, payload, status, updated_at, created_at FROM request
+SELECT id, layer_id, source, payload, status, updated_at, created_at FROM request
 WHERE id = $1 LIMIT 1
 `
 
@@ -68,7 +68,7 @@ func (q *Queries) GetRequest(ctx context.Context, id int64) (Request, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.LayerID,
-		&i.EnvironmentID,
+		&i.Source,
 		&i.Payload,
 		&i.Status,
 		&i.UpdatedAt,
@@ -78,7 +78,7 @@ func (q *Queries) GetRequest(ctx context.Context, id int64) (Request, error) {
 }
 
 const listRequests = `-- name: ListRequests :many
-SELECT id, layer_id, environment_id, payload, status, updated_at, created_at FROM request
+SELECT id, layer_id, source, payload, status, updated_at, created_at FROM request
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -101,7 +101,7 @@ func (q *Queries) ListRequests(ctx context.Context, arg ListRequestsParams) ([]R
 		if err := rows.Scan(
 			&i.ID,
 			&i.LayerID,
-			&i.EnvironmentID,
+			&i.Source,
 			&i.Payload,
 			&i.Status,
 			&i.UpdatedAt,
@@ -120,26 +120,26 @@ func (q *Queries) ListRequests(ctx context.Context, arg ListRequestsParams) ([]R
 const updateRequest = `-- name: UpdateRequest :exec
 UPDATE request
   set layer_id = $2,
-    environment_id = $3,
+    source = $3,
     payload = $4,
     status= $5,
-  updated_at = now()
+    updated_at = now()
 WHERE id = $1
 `
 
 type UpdateRequestParams struct {
-	ID            int64  `json:"id"`
-	LayerID       int64  `json:"layer_id"`
-	EnvironmentID int64  `json:"environment_id"`
-	Payload       []byte `json:"payload"`
-	Status        string `json:"status"`
+	ID      int64  `json:"id"`
+	LayerID int64  `json:"layer_id"`
+	Source  string `json:"source"`
+	Payload string `json:"payload"`
+	Status  string `json:"status"`
 }
 
 func (q *Queries) UpdateRequest(ctx context.Context, arg UpdateRequestParams) error {
 	_, err := q.db.Exec(ctx, updateRequest,
 		arg.ID,
 		arg.LayerID,
-		arg.EnvironmentID,
+		arg.Source,
 		arg.Payload,
 		arg.Status,
 	)

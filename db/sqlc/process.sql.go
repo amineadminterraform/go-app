@@ -16,7 +16,7 @@ INSERT INTO process (
     template_id
 ) VALUES (
     $1, $2, $3
-) RETURNING id, argo_id, name, created_at, template_id
+) RETURNING id, argo_id, name, created_at, updated_at, template_id
 `
 
 type CreateProcessParams struct {
@@ -33,6 +33,7 @@ func (q *Queries) CreateProcess(ctx context.Context, arg CreateProcessParams) (P
 		&i.ArgoID,
 		&i.Name,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.TemplateID,
 	)
 	return i, err
@@ -49,7 +50,7 @@ func (q *Queries) DeleteProcess(ctx context.Context, id int64) error {
 }
 
 const getProcess = `-- name: GetProcess :one
-SELECT id, argo_id, name, created_at, template_id FROM process
+SELECT id, argo_id, name, created_at, updated_at, template_id FROM process
 WHERE id = $1 LIMIT 1
 `
 
@@ -61,13 +62,14 @@ func (q *Queries) GetProcess(ctx context.Context, id int64) (Process, error) {
 		&i.ArgoID,
 		&i.Name,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.TemplateID,
 	)
 	return i, err
 }
 
 const listProcesss = `-- name: ListProcesss :many
-SELECT id, argo_id, name, created_at, template_id FROM process
+SELECT id, argo_id, name, created_at, updated_at, template_id FROM process
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -92,6 +94,7 @@ func (q *Queries) ListProcesss(ctx context.Context, arg ListProcesssParams) ([]P
 			&i.ArgoID,
 			&i.Name,
 			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.TemplateID,
 		); err != nil {
 			return nil, err
