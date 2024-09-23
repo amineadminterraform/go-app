@@ -13,21 +13,17 @@ import (
 
 var testQueries *Queries
 
+func TestMain(m *testing.M) {
 
-
-	
-func TestMain(m *testing.M){
-	
-	Config , err:= utils.LoadConfig("../../")
-	if err != nil{
+	Config, err := utils.LoadConfig("../../")
+	if err != nil {
 		log.Fatal("cannot load config :", err)
 	}
-	testDB,err:= pgx.Connect(context.Background(),Config.DBSource)
-	if err!=nil{
+	testDB, err := pgx.Connect(context.Background(), Config.DBSource)
+	if err != nil {
 		log.Fatal("You cannot connect to db :", err)
 	}
 	defer testDB.Close(context.Background())
-	testQueries= New(testDB)
+	testQueries = New(testDB)
 	os.Exit(m.Run())
 }
-

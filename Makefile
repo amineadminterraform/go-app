@@ -13,5 +13,5 @@ test:
 server:
 	go run main.go		 
 mock:
-	ockgen -destination "db/mock/store.go" -package mockdb  github.com/amineadminterraform/go-app/db/sqlc Store	
+	mockgen -destination "db/mock/store.go" -package mockdb  github.com/amineadminterraform/go-app/db/sqlc Store	
 .PHONY: createdb dropdb migrateup migratedown sqlc test mock server	

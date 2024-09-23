@@ -1,0 +1,125 @@
+basePath: /
+definitions:
+  api.CreateProjectRequest:
+    properties:
+      description:
+        type: string
+      git_path:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  api.SwaggerProject:
+    properties:
+      created_at:
+        description: Use time.Time instead of pgtype.Timestamptz
+        type: string
+      description:
+        type: string
+      git_path:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  api.UpdateProjectRequest:
+    properties:
+      description:
+        type: string
+      git_path:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: A PLATFORM OPERATIONS API in golang using Gin framework
+  title: PLATFORM OPERATIONS API
+  version: "1.0"
+paths:
+  /project:
+    post:
+      description: Create a project and saves it in postgresql
+      parameters:
+      - description: Create project
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SwaggerProject'
+      summary: Create a new project
+  /project/{id}:
+    delete:
+      description: Get a project from postgresql
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a project with a specified id
+    get:
+      description: Get a project according to their ID
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a project
+    patch:
+      description: update a project from postgresql
+      parameters:
+      - description: update project
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateProjectRequest'
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: update a project with a specified id
+  /projects:
+    get:
+      description: List projects according to the page_id and page_size
+      parameters:
+      - description: Page ID
+        in: query
+        name: page_id
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: List all projects
+swagger: "2.0"
