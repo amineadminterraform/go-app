@@ -9,5 +9,6 @@ CMD [ "/app/main" ]
 FROM alpine:3.19
 WORKDIR /app
 EXPOSE 8080
+COPY . .
 COPY --from=builder /app/main .
 CMD [ "/app/main" ]

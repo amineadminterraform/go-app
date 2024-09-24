@@ -33,4 +33,7 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot start server :", err)
 	}
+	log.Println("Server Starting at localhost:8000")
+	log.Println("Swagger at  localhost:8000/docs/index.html")
+
 }
