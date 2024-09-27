@@ -2,9 +2,12 @@ package api
 
 import (
 	db "github.com/amineadminterraform/go-app/db/sqlc"
+	prom_metrics "github.com/amineadminterraform/go-app/pkg/metrics"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,6 +20,15 @@ type Server struct {
 }
 
 func NewServer(store db.Store) *Server {
+
+	version := "2.16.5"
+	req := prometheus.NewRegistry()
+	m := prom_metrics.NewMetrics(req)
+	m.Info.With(prometheus.Labels{"version": version}).Set(1)
+	m.Devices.Set(float64(len(devices)))
+	promHandler := promhttp.HandlerFor(req, promhttp.HandlerOpts{} )
+
+	
 	
 	server := &Server{store: store}
 	router := gin.Default()
@@ -71,9 +83,8 @@ func NewServer(store db.Store) *Server {
 	router.GET("/processes", server.ListProcesss)
 	router.DELETE("/process/:id", server.DeleteProcess)
 	router.PATCH("/process/:id", server.UpdateProcess)
-	
-	
-	
+	//Routes for Prometheus service	
+	router.GET("/metrics", gin.WrapH(promHandler))	
 	
 	
 	
